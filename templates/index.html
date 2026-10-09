@@ -1,0 +1,114 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SmartCampus | Student Portal</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f1f5f9;
+      color: #172554;
+    }
+    header {
+      background: linear-gradient(120deg, #172554, #4338ca);
+      color: white;
+      padding: 30px 8%;
+    }
+    header p { color: #dbeafe; }
+    main { max-width: 1000px; margin: 30px auto; padding: 0 20px; }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 18px;
+    }
+    .card {
+      background: white;
+      padding: 24px;
+      border-radius: 14px;
+      box-shadow: 0 5px 20px #0f172a12;
+    }
+    .card h2 { color: #4338ca; }
+    .status { color: #15803d; font-weight: bold; }
+    button {
+      border: 0;
+      border-radius: 8px;
+      padding: 11px 16px;
+      color: white;
+      background: #4338ca;
+      cursor: pointer;
+    }
+    footer { text-align: center; padding: 25px; color: #64748b; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🎓 SmartCampus</h1>
+    <p>Student and Course Management Portal</p>
+    <span>DevOps CI/CD Demonstration</span>
+  </header>
+
+  <main>
+    <h2>Welcome to SmartCampus</h2>
+    <div class="cards">
+      <section class="card">
+        <h2>Students</h2>
+        <p>Manage student information using the REST API.</p>
+        <button onclick="loadStudents()">View Students</button>
+      </section>
+      <section class="card">
+        <h2>Courses</h2>
+        <p>Cloud Computing, DevOps Engineering and more.</p>
+      </section>
+      <section class="card">
+        <h2>Application Health</h2>
+        <p id="health" class="status">Checking...</p>
+        <button onclick="checkHealth()">Check Again</button>
+      </section>
+    </div>
+
+    <section class="card" style="margin-top:20px">
+      <h2>Student Directory</h2>
+      <ul id="students">Click "View Students" to load records.</ul>
+    </section>
+  </main>
+
+  <footer>SmartCampus • Flask • Docker • Jenkins • Kubernetes</footer>
+
+  <script>
+    async function checkHealth() {
+      const output = document.getElementById("health");
+      try {
+        const response = await fetch("/health");
+        const data = await response.json();
+        output.textContent = response.ok
+          ? "Healthy • Version " + data.version
+          : "Unhealthy";
+      } catch {
+        output.textContent = "Unable to reach API";
+      }
+    }
+
+    async function loadStudents() {
+      const list = document.getElementById("students");
+      try {
+        const response = await fetch("/api/students");
+        const students = await response.json();
+        list.replaceChildren();
+        students.forEach(student => {
+          const item = document.createElement("li");
+          item.textContent = student.name + " — " + student.course;
+          list.appendChild(item);
+        });
+      } catch {
+        list.textContent = "Could not load students.";
+      }
+    }
+
+    checkHealth();
+  </script>
+</body>
+</html>
