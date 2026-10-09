@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
         - name: smartcampus
-          image: YOUR_DOCKERHUB_USERNAME/smartcampus:latest
+          image: iamshravani9226/smartcampus:latest
           imagePullPolicy: Always
           ports:
             - name: http
